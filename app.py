@@ -73,7 +73,7 @@ def get_disk():
 def get_network():
     conns = list()
     for conn in [(k, *v) for k, v in psutil.net_if_stats().items()]:
-        if(conn[1]):
+        if(conn[1] and conn[3]>0):
             conns.append({
                 "name": conn[0],
                 "speed": get_str(conn[3], 1,1," MB"),
