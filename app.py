@@ -12,6 +12,6 @@ def index():
     }
 
 def get_load():
-    mem = psutil.virtual_memory()[2]
-    cpu = psutil.getloadavg()[0]*10
-    return(str(cpu)+"%",str(mem)+"%")
+    mem = psutil.virtual_memory()
+    cpu = psutil.getloadavg()
+    return(cpu,mem)
