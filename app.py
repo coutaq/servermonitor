@@ -4,10 +4,20 @@ import hashlib
 
 app = Flask(__name__)
 STEP = 1024
-_key = hashlib.sha256('test'.encode()).hexdigest()
+api_keys = list()
+
+def get_keys():
+    f = open("APIKEYS", "r")
+    for x in f:
+      if(x):
+          api_keys.append( hashlib.sha256(x.strip().encode()).hexdigest())
+    f.close()
+    
+get_keys()
+
 @app.route("/", methods=["GET"])
 def index():
-    checkKey(request.args.get("key"))
+    check_key(request.args.get("key"))
     return {
         "cpu": get_cpu(),
         "mem": get_mem(),
@@ -15,10 +25,10 @@ def index():
         "network": get_network(),
         "sensors": get_sensors()
     }
-def checkKey(key):
-    if hashlib.sha256(str(key).encode()).hexdigest() != _key:
+def check_key(key):
+    if hashlib.sha256(str(key).strip().encode()).hexdigest() not in api_keys:
         abort(401)
-def getStr(value, multiplier, accuracy, suffix):
+def get_str(value, multiplier, accuracy, suffix):
     return str(round(value*multiplier, accuracy))+suffix
 def get_cpu():
     cores = psutil.cpu_count(logical=False)
@@ -29,47 +39,46 @@ def get_cpu():
         "cores": cores,
         "threads":threads,
         "total_load":total_load,
-        "cores_load":cores_load
+        "threads_load":cores_load
     }
 def get_mem():
     mem = psutil.virtual_memory()
     return {
-        "total":getStr(mem[0], 1/(STEP**3), 1, " GB"),
-        "available":getStr(mem[0]-mem[3], 1/(STEP**3), 1, " GB"),
-        "percent": getStr(mem[2], 1, 1, "%"),
-        "used": getStr(mem[3], 1/(STEP**3), 1, " GB"),
+        "total":get_str(mem[0], 1/(STEP**3), 1, " GB"),
+        "available":get_str(mem[0]-mem[3], 1/(STEP**3), 1, " GB"),
+        "percent": get_str(mem[2], 1, 1, "%"),
+        "used": get_str(mem[3], 1/(STEP**3), 1, " GB"),
         }
     
 def get_disk():
-    drives = list()
-    disks = list(filter(lambda d: d[2], psutil.disk_partitions()))
-    for disk in disks:
-        storage = psutil.disk_usage(disk[1])
-        if(storage[0]>0.2*(STEP**3)):
-            drives.append({
-                "device": disk[0],
-                "mountpoint": disk[1],
-                "fstype": disk[2],
-                "storage":{
-                    "total": getStr(storage[0], 1/(STEP**3), 1, " GB"),
-                    "available": getStr(storage[2], 1/(STEP**3), 1, " GB"),
-                    "percent": getStr(storage[3], 1, 1, "%"),
-                    "used": getStr(storage[1], 1/(STEP**3), 1, " GB"),
-                }
-            })
-    return drives
+    disks = list()
+    for disk in psutil.disk_partitions():
+        if(disk[2]):
+            storage = psutil.disk_usage(disk[1])
+            if(storage[0]>0.2*(STEP**3)):
+                disks.append({
+                    "device": disk[0],
+                    "mountpoint": disk[1],
+                    "fstype": disk[2],
+                    "storage":{
+                        "total": get_str(storage[0], 1/(STEP**3), 1, " GB"),
+                        "available": get_str(storage[2], 1/(STEP**3), 1, " GB"),
+                        "percent": get_str(storage[3], 1, 1, "%"),
+                        "used": get_str(storage[1], 1/(STEP**3), 1, " GB"),
+                    }
+                })
+    return disks
 
 
 def get_network():
-    # conns = list(filter(lambda c: c[1],psutil.net_if_stats()))
-    conns = list(filter(lambda c: c[1],[(k, *v) for k, v in psutil.net_if_stats().items()]))
-    connections = list()
-    for conn in conns:
-        connections.append({
-            "name": conn[0],
-            "speed": getStr(conn[3], 1,1," MB"),
-        })
-    return connections
+    conns = list()
+    for conn in [(k, *v) for k, v in psutil.net_if_stats().items()]:
+        if(conn[1]):
+            conns.append({
+                "name": conn[0],
+                "speed": get_str(conn[3], 1,1," MB"),
+            })
+    return conns
 
 
 def get_sensors():
