@@ -28,8 +28,7 @@ def get_mem():
     print(mem)
     return {
         "total":getStr(mem[0], 1/(STEP**3), 1, " GB"),
-        "available":getStr(mem[1], 1/(STEP**3), 1, " GB"),
+        "available":getStr(mem[0]-mem[3], 1/(STEP**3), 1, " GB"),
         "percent": getStr(mem[2], 1, 1, "%"),
         "used": getStr(mem[3], 1/(STEP**3), 1, " GB"),
-        "free":getStr(mem[4], 1/(STEP**3), 1, " GB")
         }
