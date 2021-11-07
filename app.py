@@ -40,7 +40,7 @@ def get_disk():
     disks = list(filter(lambda d: d[2], psutil.disk_partitions()))
     for disk in disks:
         storage = psutil.disk_usage(disk[1])
-        if(storage[0]>0.1):
+        if(storage[0]>0.1*(STEP**3)):
             drives.append({
                 "device": disk[0],
                 "mountpoint": disk[1],
