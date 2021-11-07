@@ -5,7 +5,6 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    load = get_load()
     return {
         "cpu": get_cpu(),
         "mem": get_mem(),
