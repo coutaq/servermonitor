@@ -13,5 +13,5 @@ def index():
 
 def get_load():
     mem = psutil.virtual_memory()
-    cpu = psutil.getloadavg()
+    cpu = psutil.cpu_percent(1)
     return(cpu,mem)
