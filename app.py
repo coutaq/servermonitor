@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request, abort
 import psutil
 import hashlib
+from flask_sock import Sock
 
 app = Flask(__name__)
+sock = Sock(app)
 STEP = 1024
 api_keys = list()
 
@@ -18,23 +20,32 @@ get_keys()
 @app.route("/", methods=["GET"])
 def index():
     check_key(request.args.get("key"))
-    return {
+    return get_data()
+    
+@sock.route('/data')
+def echo(ws):
+    check_key(request.args.get("key"))
+    while True:
+        ws.send(get_data())
+def check_key(key):
+    if hashlib.sha256(str(key).strip().encode()).hexdigest() not in api_keys:
+        abort(401)
+def get_str(value, multiplier, accuracy, suffix):
+    return str(round(value*multiplier, accuracy))+suffix
+
+def get_data():
+      return {
         "cpu": get_cpu(),
         "mem": get_mem(),
         "disks": get_disk(),
         "network": get_network(),
         "sensors": get_sensors()
     }
-def check_key(key):
-    if hashlib.sha256(str(key).strip().encode()).hexdigest() not in api_keys:
-        abort(401)
-def get_str(value, multiplier, accuracy, suffix):
-    return str(round(value*multiplier, accuracy))+suffix
 def get_cpu():
     cores = psutil.cpu_count(logical=False)
     threads = psutil.cpu_count(logical=True)
-    total_load = psutil.cpu_percent(1)
-    cores_load = psutil.cpu_percent(1, percpu=True)
+    total_load = psutil.cpu_percent(0)
+    cores_load = psutil.cpu_percent(0, percpu=True)
     return {
         "cores": cores,
         "threads":threads,
