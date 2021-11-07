@@ -1,10 +1,13 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, abort
 import psutil
+import hashlib
 
 app = Flask(__name__)
 STEP = 1024
-@app.route("/")
+_key = hashlib.sha256('test'.encode()).hexdigest()
+@app.route("/", methods=["GET"])
 def index():
+    checkKey(request.args.get("key"))
     return {
         "cpu": get_cpu(),
         "mem": get_mem(),
@@ -12,7 +15,9 @@ def index():
         "network": get_network(),
         "sensors": get_sensors()
     }
-
+def checkKey(key):
+    if hashlib.sha256(str(key).encode()).hexdigest() != _key:
+        abort(401)
 def getStr(value, multiplier, accuracy, suffix):
     return str(round(value*multiplier, accuracy))+suffix
 def get_cpu():
@@ -40,7 +45,7 @@ def get_disk():
     disks = list(filter(lambda d: d[2], psutil.disk_partitions()))
     for disk in disks:
         storage = psutil.disk_usage(disk[1])
-        if(storage[0]>0.1*(STEP**3)):
+        if(storage[0]>0.2*(STEP**3)):
             drives.append({
                 "device": disk[0],
                 "mountpoint": disk[1],
