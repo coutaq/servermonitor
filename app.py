@@ -40,17 +40,18 @@ def get_disk():
     disks = list(filter(lambda d: d[2], psutil.disk_partitions()))
     for disk in disks:
         storage = psutil.disk_usage(disk[1])
-        drives.append({
-            "device": disk[0],
-            "mountpoint": disk[1],
-            "fstype": disk[2],
-            "storage":{
-                 "total": getStr(storage[0], 1/(STEP**3), 1, " GB"),
-                 "available": getStr(storage[2], 1/(STEP**3), 1, " GB"),
-                 "percent": getStr(storage[3], 1, 1, "%"),
-                 "used": getStr(storage[1], 1/(STEP**3), 1, " GB"),
-            }
-        })
+        if(storage[0]>0.1):
+            drives.append({
+                "device": disk[0],
+                "mountpoint": disk[1],
+                "fstype": disk[2],
+                "storage":{
+                    "total": getStr(storage[0], 1/(STEP**3), 1, " GB"),
+                    "available": getStr(storage[2], 1/(STEP**3), 1, " GB"),
+                    "percent": getStr(storage[3], 1, 1, "%"),
+                    "used": getStr(storage[1], 1/(STEP**3), 1, " GB"),
+                }
+            })
     return drives
 
 
