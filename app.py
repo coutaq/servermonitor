@@ -93,13 +93,13 @@ def get_network():
 
 
 def get_sensors():
-    sensors = list()
+    sensors = dict()
     try:
-        sensors.append(psutil.sensors_temperatures())
+        sensors["t"] = (psutil.sensors_temperatures())
     except Exception:
         pass
     try:
-        sensors.append(psutil.sensors_fans())
+        sensors["fans"] = (psutil.sensors_fans())
     except Exception:
         pass
     return sensors
