@@ -39,7 +39,7 @@ def get_data():
         "mem": get_mem(),
         "disks": get_disk(),
         "network": get_network(),
-        "sensors": get_sensors()
+        # "sensors": get_sensors()
       }
 def get_cpu():
     cores = psutil.cpu_count(logical=False)
