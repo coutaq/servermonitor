@@ -34,13 +34,13 @@ def get_str(value, multiplier, accuracy, suffix):
     return str(round(value*multiplier, accuracy))+suffix
 
 def get_data():
-      return jsonify(
-        cpu = get_cpu(),
-        mem = get_mem(),
-        disks = get_disk(),
-        network = get_network(),
-        sensors = get_sensors()
-    )
+      return {
+        cpu: get_cpu(),
+        mem: get_mem(),
+        disks: get_disk(),
+        network: get_network(),
+        sensors: get_sensors()
+      }
 def get_cpu():
     cores = psutil.cpu_count(logical=False)
     threads = psutil.cpu_count(logical=True)
