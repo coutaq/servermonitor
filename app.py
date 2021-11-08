@@ -95,7 +95,7 @@ def get_network():
 def get_sensors():
     sensors = dict()
     try:
-        sensors["t"] = (psutil.sensors_temperatures())
+        sensors["temps"] = (psutil.sensors_temperatures())
     except Exception:
         pass
     try:
