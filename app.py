@@ -20,7 +20,7 @@ get_keys()
 @app.route("/", methods=["GET"])
 def index():
     check_key(request.args.get("key"))
-    return get_data()
+    return jsonify(get_data())
     
 @sock.route('/data')
 def echo(ws):
