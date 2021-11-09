@@ -39,7 +39,7 @@ def get_data():
         "mem": get_mem(),
         "disks": get_disk(),
         "network": get_network(),
-        # "sensors": get_sensors()
+        "temps": get_temps()
       }
 def get_cpu():
     cores = psutil.cpu_count(logical=False)
@@ -92,14 +92,20 @@ def get_network():
     return conns
 
 
-def get_sensors():
-    sensors = dict()
+def get_temps():
+    temps = list()
     try:
-        sensors["temps"] = (psutil.sensors_temperatures())
+        for t in [(k, *v) for k, v in psutil.sensors_temperatures().items()]:
+            temps.append({
+                "name": t[0],
+                "critical": t[1],
+                "current": t[2],
+                "high": t[3]
+                })
     except Exception:
         pass
-    try:
-        sensors["fans"] = (psutil.sensors_fans())
-    except Exception:
-        pass
-    return sensors
+    # try:
+    #     sensors["fans"] = (psutil.sensors_fans())
+    # except Exception:
+    #     pass
+    return temps
