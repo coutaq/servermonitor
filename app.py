@@ -95,7 +95,7 @@ def get_network():
 def get_temps():
     temps = list()
     # try:
-    for t in psutil.sensors_temperatures().items:
+    for t in psutil.sensors_temperatures()._asdict():
         print(t)
         # temps.append({
         #     "name": t[0],
