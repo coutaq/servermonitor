@@ -98,7 +98,7 @@ def get_temps():
         return temps
     
     # try:
-    for name, t in sensors_temperatures().items():
+    for name, t in psutil.sensors_temperatures().items():
         # t = temp._asdict()
         # print(t)
         temps.append({
