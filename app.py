@@ -100,13 +100,13 @@ def get_temps():
     # try:
     for name, t in psutil.sensors_temperatures().items():
         # t = temp._asdict()
-        # print(t)
-        temps.append({
-            "name": name,
-            "critical": t[0],
-            "current": t[1],
-            "high": t[2]
-            })
+        print(t)
+        # temps.append({
+        #     "name": name,
+        #     "critical": t[0],
+        #     "current": t[1],
+        #     "high": t[2]
+        #     })
     # except Exception:
     #     pass
     # try:
