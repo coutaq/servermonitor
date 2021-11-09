@@ -3,7 +3,7 @@ import psutil
 import hashlib
 from flask_sock import Sock
 import speedtest
-from datetime import datetime
+import datetime as dt
 
 app = Flask(__name__)
 sock = Sock(app)
@@ -11,13 +11,13 @@ STEP = 1024
 api_keys = list()
 speedtest = speedtest.Speedtest()
 last_speed = 0
-speed_interval = datetime.timedelta(minutes=2)
-speed_measured = datetime.now()-speed_interval
+speed_interval = dt.timedelta(minutes=2)
+speed_measured = dt.datetime.now()-speed_interval
 
 
 def isTimeToCheckSpeed():
-    if(speed_measured-speed_interval > datetime.timedelta()):
-        speed_measured = datetime.now()
+    if(speed_measured-speed_interval > dt.timedelta()):
+        speed_measured = dt.datetime.now()
         return True
     return False
 
@@ -56,9 +56,9 @@ def get_str(value, multiplier, accuracy, suffix):
 
 
 def get_data():
-    now = datetime.now()
+    now = dt.datetime.now()
     return {
-        "sys_time": now.strftime("d/%m/%y %H:%M"),
+        "sys_time": now.strftime("%d/%m/%y %H:%M"),
         "cpu": get_cpu(),
         "mem": get_mem(),
         "disks": get_disk(),
