@@ -98,9 +98,9 @@ def get_temps():
         return temps
     
     # try:
-    for name, t in psutil.sensors_temperatures().items():
+    for name, entries in psutil.sensors_temperatures().items():
         # t = temp._asdict()
-        print(t)
+        print(f"{name}: {entries}")
         # temps.append({
         #     "name": name,
         #     "critical": t[0],
