@@ -65,7 +65,7 @@ def get_data():
         "disks": get_disk(),
         "network": get_network(),
         "temps": get_temps(),
-        "speed": get_speed() if isTimeToCheckSpeed else last_speed
+        # "speed": get_speed() if isTimeToCheckSpeed else last_speed
     }
 
 
