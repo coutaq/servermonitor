@@ -44,6 +44,7 @@ def echo(ws):
     check_key(request.args.get("key"))
     while True:
         ws.send(get_data())
+        time.sleep(0.5)
 
 
 def check_key(key):
