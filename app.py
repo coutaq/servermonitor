@@ -94,7 +94,7 @@ def get_network():
 
 def get_temps():
     temps = list()
-    try:
+    # try:
         for t in [(k, *v) for k, v in psutil.sensors_temperatures().items()]:
             temps.append({
                 "name": t[0],
@@ -102,8 +102,8 @@ def get_temps():
                 "current": t[2],
                 "high": t[3]
                 })
-    except Exception:
-        pass
+    # except Exception:
+    #     pass
     # try:
     #     sensors["fans"] = (psutil.sensors_fans())
     # except Exception:
