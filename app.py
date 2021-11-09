@@ -96,12 +96,13 @@ def get_temps():
     temps = list()
     # try:
     for t in [(k, *v) for k, v in psutil.sensors_temperatures().items()]:
-        temps.append({
-            "name": t[0],
-            "critical": t[1],
-            "current": t[2],
-            "high": t[3]
-            })
+        print(t)
+        # temps.append({
+        #     "name": t[0],
+        #     "critical": t[1],
+        #     "current": t[2],
+        #     "high": t[3]
+        #     })
     # except Exception:
     #     pass
     # try:
