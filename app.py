@@ -94,16 +94,19 @@ def get_network():
 
 def get_temps():
     temps = list()
+    if not hasattr(psutil, "sensors_temperatures"):
+        return temps
+    
     # try:
-    for temp in psutil.sensors_temperatures():
-        t = temp._asdict()
-        print(t)
-        # temps.append({
-        #     "name": t[0],
-        #     "critical": t[1],
-        #     "current": t[2],
-        #     "high": t[3]
-        #     })
+    for name, t in sensors_temperatures().items():
+        # t = temp._asdict()
+        # print(t)
+        temps.append({
+            "name": name,
+            "critical": t[0],
+            "current": t[1],
+            "high": t[2]
+            })
     # except Exception:
     #     pass
     # try:
